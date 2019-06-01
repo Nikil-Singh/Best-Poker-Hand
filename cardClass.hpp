@@ -1,15 +1,16 @@
 #include <iostream>
-#include <cstring>
 using namespace std;
 
 class Card {
     public:
-
+        //Constructor for Card.
         Card(int newRank, string newSuit);
 
-        int getRank();
-        string getSuit();
+        //Methods for getting attributes.
+        int getRank();   //Returns rank
+        string getSuit();//Returns suit
+
     private:
-        int _rank;
-        string _suit;
+        int _rank;      //The rank of the card.
+        string _suit;   //The suit of the card.
 };
