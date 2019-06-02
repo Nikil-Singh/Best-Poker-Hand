@@ -20,3 +20,19 @@ string Card::getSuit() {
 string Card::returnString() {
     return getRank() + getSuit();
 }
+
+int Card::convertRankToNum(string rank) {
+    int r = 0;
+    if (!rank.compare("A")) {
+        r = 14;
+    } else if (!rank.compare("K")) {
+        r = 13;
+    } else if (!rank.compare("Q")) {
+        r = 12;
+    } else if (!rank.compare("J")) {
+        r = 11;
+    } else {
+        r = stoi(rank);
+    }
+    return r;
+}

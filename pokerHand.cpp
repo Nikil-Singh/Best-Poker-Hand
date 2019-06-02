@@ -34,11 +34,12 @@ int main() {
     if (cards.empty()) {
         cout << "No input was detected.\n";
         return 0;
-    } 
+    }
     vector<Card> tmpHand = generateHand(cards);
     Hand hand(tmpHand);
-    cout << "Successful\n";
     hand.printCards();
+    string test = hand.bestHand();
+    cout << test;
     return 0;
 }
 

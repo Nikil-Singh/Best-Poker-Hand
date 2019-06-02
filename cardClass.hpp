@@ -10,6 +10,7 @@ class Card {
         string getRank();   //Returns rank
         string getSuit();   //Returns suit
         string returnString(); //Returns card as a string.
+        int convertRankToNum(string rank);
     private:
         string _rank;      //The rank of the card.
         string _suit;   //The suit of the card.
