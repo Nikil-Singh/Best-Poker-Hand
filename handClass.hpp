@@ -6,12 +6,11 @@
 class Hand {
     public:
         //Constructor
-        Hand(string cards);
+        Hand(vector<Card> hand);
         //Methods
-        vector<Card> getCards();
-        string bestHand();
-        vector<Card> generateHand(string cards);
-        void addCard(Card card);
+        vector<Card> getHand(); //Returns hand.
+        void printCards();      //Prints out cards.
+
     private:
-        vector<Card> cards;
+        vector<Card> _cards;
 };
