@@ -20,7 +20,7 @@ void Hand::printCards() {
 
 //Determines and returns the best poker hand.
 string Hand::bestHand() {
-    //Gets a hand that is sorted numerically.
+    //Gets a hand that is sorted numerically in descending order.
     vector<Card> hand = sortHand();
     string finalHand = "";
 
@@ -29,9 +29,10 @@ string Hand::bestHand() {
         string flushSuit = flush(hand);
         //If a flush is possible.
         if (flushSuit.compare(" ")) {
-            //Gets a vector containing only the suit that results in a flush.
+            //Gets a vector containing only the highest ranking 5 cards with
+            //suit that results in a flush.
             vector<Card> flushSet;
-            for (int i = 0; i < hand.size(); i++) {
+            for (int i = 0; i < 5; i++) {
                 if (!((hand[i].getSuit()).compare(flushSuit))) {
                     flushSet.push_back(hand[i]);
                 }
@@ -41,7 +42,7 @@ string Hand::bestHand() {
             if (straightStart != -1 && !((flushSet[straightStart].getRank()).compare("A"))) {
                 //Check if royal flush.
                 cout << "Royal Flush\n";
-                for (int i = straightStart; i > straightStart-5; i--) {
+                for (int i = straightStart; i < flushSet.size(); i++) {
                     cout << flushSet[i].returnString() << " ";
                 }
                 cout << "\n";
@@ -49,7 +50,7 @@ string Hand::bestHand() {
             } else if (straightStart != -1 && (flushSet[straightStart].getRank()).compare("A")) {
                 //Check if straight flush.
                 cout << "Straight Flush\n";
-                for (int i = straightStart; i > straightStart-5; i--) {
+                for (int i = straightStart; i < flushSet.size(); i++) {
                     cout << flushSet[i].returnString() << " ";
                 }
                 cout << "\n";
@@ -57,7 +58,7 @@ string Hand::bestHand() {
             } else {
                 //Thus it is only a flush.
                 cout << "Flush\n";
-                for (int i = flushSet.size()-1; i > flushSet.size()-6; i--) {
+                for (int i = 0; i < flushSet.size(); i++) {
                     cout << flushSet[i].returnString() << " ";
                 }
                 cout << "\n";
@@ -66,7 +67,16 @@ string Hand::bestHand() {
         } else {
             //Check if full house.
 
+
             //Check if straight.
+            int straightStart = straight(hand);
+            if (straightStart != -1) {
+                cout << "Straight\n";
+                for (int i = straightStart; i < straightStart + 5; i++) {
+                    cout << hand[i].returnString() << " ";
+                }
+                cout << "\n";
+            }
 
         }
     }
@@ -126,28 +136,61 @@ string Hand::flush(vector<Card> hand) {
 //Gets the start of a straight if it exists.
 int Hand::straight(vector<Card> hand) {
     int straightCount = 1;
-    int straightStart = hand.size();
+    int straightStart = 0;
     string rank1 = "", rank2 = "";
     int r1 = 0, r2 = 0;
     //Finds highest straight.
-    for (int i = hand.size()-1; i > 0; i--) {
+    for (int i = 0; i < hand.size()-1; i++) {
         rank1 = hand[i].getRank();
-        rank2 = hand[i-1].getRank();
+        rank2 = hand[i+1].getRank();
         r1 = hand[i].convertRankToNum(rank1);
-        r2 = hand[i-1].convertRankToNum(rank2);
-        cout << "r1: " << r1 << " r2: "<< r2 << "\n";
+        r2 = hand[i+1].convertRankToNum(rank2);
         if (r1-1 == r2) {
             straightCount++;
-            if (straightCount == 5) {
-                straightStart = i;
-                break;
-            }    
+            if (straightCount == 5) break;
         } else {
             straightCount = 1;
+            straightStart = i+1;
         }
     }
     if (straightCount == 5) return straightStart;
     return -1;
+}
+
+//Returns string of ranks that have a triple.
+string Hand::triple(vector<Card> hand) {
+    string triples = "";
+    int count = 0;
+    for (int i = 0; i < hand.size()-1; i++) {
+        //If ranks match
+        if (!hand[i].getRank().compare(hand[i].getRank())) {
+            count++;
+        } else if (count == 3) {
+            count = 0;
+            triples = triples + hand[i].getRank();
+        } else {
+            count = 0;
+        }
+    }
+    return triples;
+}
+
+//Returns string of ranks that have a pair.
+string Hand::pair(vector<Card> hand) {
+    string pair = "";
+    int count = 0;
+    for (int i = 0; i < hand.size()-1; i++) {
+        //If ranks match
+        if (!hand[i].getRank().compare(hand[i].getRank())) {
+            count++;
+        } else if (count == 2) {
+            count = 0;
+            pair = pair + hand[i].getRank();
+        } else {
+            count = 0;
+        }
+    }
+    return pair;
 }
 
 //Compares card ranks.
@@ -156,6 +199,6 @@ bool Hand::compareHandRank(Card card1, Card card2) {
     string rank2 = card2.getRank();
     int r1 = card1.convertRankToNum(rank1);
     int r2 = card2.convertRankToNum(rank2);
-    if (r1 > r2) return true;
+    if (r1 < r2) return true;
     return false;
 }

@@ -14,6 +14,8 @@ class Hand {
         vector<Card> sortHand();//Returns a numerically sorted hand.
         string flush(vector<Card> hand); //Checks if there is a flush.
         int straight(vector<Card> hand); //Checks if there is a straight.
+        string triple(vector<Card> hand); //Checks if there is a triple.
+        string pair(vector<Card> hand); //Checks if there is a pair.
         bool compareHandRank(Card card1, Card card2); //Compares card ranks.
     private:
         vector<Card> _cards;

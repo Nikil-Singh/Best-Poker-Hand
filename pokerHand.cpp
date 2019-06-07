@@ -35,9 +35,12 @@ int main() {
         cout << "No input was detected.\n";
         return 0;
     }
+    if(cards.find_first_not_of(' ') == string::npos) {
+        cout << "Empty input was entered. Please input the proper cards.\n";
+        return 0;
+    }
     vector<Card> tmpHand = generateHand(cards);
     Hand hand(tmpHand);
-    hand.printCards();
     string test = hand.bestHand();
     cout << test;
     return 0;
