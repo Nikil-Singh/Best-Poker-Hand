@@ -2,12 +2,12 @@
 
 //Constructor
 Card::Card(string newRank, string newSuit) {
-    _rank = newRank;
+    _rank = convertRankToNum(newRank);
     _suit = newSuit;
 }
 
 //Returns rank.
-string Card::getRank() {
+int Card::getRank() {
     return _rank;
 }
 
@@ -18,7 +18,19 @@ string Card::getSuit() {
 
 //Returns card as a string.
 string Card::returnString() {
-    return getRank() + getSuit();
+    string rank = "";
+    int r = getRank();
+    if (r <= 10) {
+        rank = to_string(r);
+    } else {
+        switch(r) {
+            case 14 : rank = "A"; break;
+            case 13 : rank = "K"; break;
+            case 12 : rank = "Q"; break;
+            case 11 : rank = "J"; break;
+        }
+    }
+    return rank + getSuit();
 }
 
 int Card::convertRankToNum(string rank) {

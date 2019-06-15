@@ -7,11 +7,11 @@ class Card {
         Card(string newRank, string newSuit);
 
         //Methods for getting attributes.
-        string getRank();   //Returns rank
+        int getRank();   //Returns rank
         string getSuit();   //Returns suit
         string returnString(); //Returns card as a string.
         int convertRankToNum(string rank);
     private:
-        string _rank;      //The rank of the card.
+        int _rank;      //The rank of the card.
         string _suit;   //The suit of the card.
 };

@@ -39,6 +39,7 @@ int main() {
         cout << "Empty input was entered. Please input the proper cards.\n";
         return 0;
     }
+
     vector<Card> tmpHand = generateHand(cards);
     Hand hand(tmpHand);
     string test = hand.bestHand();
