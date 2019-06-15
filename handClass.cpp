@@ -65,6 +65,33 @@ string Hand::bestHand() {
             }
 
         } else {
+            //Checks for four of a kind.
+            int four = fourKind(hand);
+            if (four != -1) {
+                vector<Card> fourOfKind;
+                int max = 2;
+                for (int i = 0; i < hand.size(); i++) {
+                    if (hand[i].getRank() == four) {
+                        fourOfKind.push_back(hand[i]);
+                    }
+                    if (hand[i].getRank() != four && hand[i].getRank() > max) {
+                        max = hand[i].getRank();
+                    }
+                }
+                for (int i = 0; i < hand.size(); i++) {
+                    if (hand[i].getRank() == max) {
+                        fourOfKind.push_back(hand[i]);
+                        break;
+                    }
+                }
+                cout << "Four of a Kind\n";
+                for (int i = 0; i < fourOfKind.size(); i++) {
+                    cout << fourOfKind[i].returnString() << " ";
+                }
+                cout << "\n";
+                return "";
+            }
+
             //Check if full house.
             int triples = triple(hand);
             vector<int> pairs = pair(hand);
@@ -81,18 +108,17 @@ string Hand::bestHand() {
                     for (int i = 0; i < hand.size(); i++) {
                         //cout << "triple: " << triples.substr(0,1) << "\n";
                         if (hand[i].getRank() == triples || hand[i].getRank() == pairs[found]) {
-                            cout << "Pushed Back: " << hand[i].returnString() << "\n";
                             fullHouse.push_back(hand[i]);
-                            cout << hand[i].returnString() << " ";
                         }
+                    }
+                    cout << "Full House\n";
+                    for (int i = 0; i < fullHouse.size(); i++) {
+                        cout << fullHouse[i].returnString() << " ";
                     }
                     cout << "\n";
                 }
-                cout << "Triple: " << triples << "\n";
-                cout << "Pair: " << pairs[0] << "\n";
+                return "";
             }
-
-
 
             //Check if straight.
             int straightStart = straight(hand);
@@ -102,6 +128,7 @@ string Hand::bestHand() {
                     cout << hand[i].returnString() << " ";
                 }
                 cout << "\n";
+                return "";
             }
 
         }
@@ -177,7 +204,7 @@ int Hand::straight(vector<Card> hand) {
     return -1;
 }
 
-//Returns string of ranks that have a triple.
+//Returns rank of triple.
 int Hand::triple(vector<Card> hand) {
     int triples = -1;
     int count = 1;
@@ -196,17 +223,17 @@ int Hand::triple(vector<Card> hand) {
     return triples;
 }
 
-//Returns string of ranks that have a pair.
+//Returns vector of ranks that have a pair.
 vector<int> Hand::pair(vector<Card> hand) {
     vector<int> pair;
     int count = 1;
     for (int i = 0; i < hand.size()-1; i++) {
         //If ranks match
         if (hand[i].getRank() == hand[i+1].getRank()) {
-            cout << "Gets here: " << hand[i+1].getRank() << "\n";
             count++;
             if (count == 2) {
-                if (pair.end() != find(pair.begin(), pair.end(), hand[i].getRank())) {
+                if (pair.end() == find(pair.begin(), pair.end(), hand[i].getRank())) {
+                    cout << "Gets here: " << hand[i].getRank() << "\n";
                     pair.push_back(hand[i].getRank());
                 }
                 count = 1;
@@ -216,4 +243,22 @@ vector<int> Hand::pair(vector<Card> hand) {
         }
     }
     return pair;
+}
+
+//Returns rank of four of a kind.
+int Hand::fourKind(vector<Card> hand) {
+    int four = -1;
+    int count = 1;
+    for (int i = 0; i < hand.size()-1; i++) {
+        if (hand[i].getRank() == hand[i+1].getRank()) {
+            count++;
+            if (count == 4) {
+                four = hand[i].getRank();
+                break; //Can only have at most one triple in a hand.
+            }
+        } else {
+            count = 1;
+        }
+    }
+    return four;
 }

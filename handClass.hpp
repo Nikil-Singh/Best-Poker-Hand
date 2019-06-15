@@ -13,6 +13,7 @@ class Hand {
         string bestHand();      //Returns the best hand.
         vector<Card> sortHand();//Returns a numerically sorted hand.
         string flush(vector<Card> hand); //Checks if there is a flush.
+        int fourKind(vector<Card> hand); //Checks if there is a four of a kind.
         int straight(vector<Card> hand); //Checks if there is a straight.
         int triple(vector<Card> hand); //Checks if there is a triple.
         vector<int> pair(vector<Card> hand); //Checks if there is a pair.
