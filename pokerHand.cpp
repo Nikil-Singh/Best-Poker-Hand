@@ -43,7 +43,7 @@ int main() {
     vector<Card> tmpHand = generateHand(cards);
     Hand hand(tmpHand);
     string test = hand.bestHand();
-    cout << test;
+    cout << test << "\n";
     return 0;
 }
 

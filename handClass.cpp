@@ -18,6 +18,30 @@ void Hand::printCards() {
     cout << "\n";
 }
 
+/*
+string Hand::bestHand() {
+    //Gets a hand that is sorted numerically in descending order.
+    vector<Card> hand = sortHand();
+    
+    // First checks hands that require at least 5 cards.
+    
+    // If a flush is possible.
+     if () {
+        getHighestFlushSet();
+        if RoyalFlush print
+        if StraightFlush print
+        else NormalFlush print
+    }
+    if fourOfAKind print
+    if fullHouse print
+    if straight print
+    if threeOfAKind print
+    if twoPair print
+    if onePair print
+    else highCard print
+}
+*/
+/*
 //Determines and returns the best poker hand.
 string Hand::bestHand() {
     //Gets a hand that is sorted numerically in descending order.
@@ -32,10 +56,13 @@ string Hand::bestHand() {
             //Gets a vector containing only the highest ranking 5 cards with
             //suit that results in a flush.
             vector<Card> flushSet;
-            for (int i = 0; i < 5; i++) {
+            int j = 0;
+            for (int i = 0; i < hand.size(); i++) {
                 if (!((hand[i].getSuit()).compare(flushSuit))) {
                     flushSet.push_back(hand[i]);
+                    j++;
                 }
+                if (j == 5) break;
             }
             //Finds highest straight.
             int straightStart = straight(flushSet);
@@ -134,20 +161,119 @@ string Hand::bestHand() {
         }
     }
 
+    int check = 0;
     //Check if four of a kind.
+    if (hand.size() == 4) {
+        check = fourKind(hand);
+        if (check != -1) {
+            vector<Card> fourOfKind;
+            for (int i = 0; i < hand.size(); i++) {
+                if (hand[i].getRank() == check) {
+                    fourOfKind.push_back(hand[i]);
+                }
+            }
+            cout << "Four of a Kind\n";
+            for (int i = 0; i < fourOfKind.size(); i++) {
+                cout << fourOfKind[i].returnString() << " ";
+            }
+            cout << "\n";
+            return "";
+        }
+    }
 
     //Check if three of a kind.
+    if (hand.size() >= 3) {
+        check = triple(hand);
+        if (check != -1) {
+            vector<Card> threeOfKind;
+            for (int i = 0; i < hand.size(); i++) {
+                if (hand[i].getRank() == check) {
 
-    //Check if two pair.
+                }
+            }
+        }
+    }
 
-    //Check if pair.
+    //Check if two pair or pair.
+    vector<int> setPairs = pair(hand);
+    if (setPairs.size() > 1) {
+
+    } else if (setPairs.size() == 1) {
+
+    }
+
 
     //Get highest card.
 
-    /*
     for (int i = 0; i < hand.size(); i++) cout << hand[i].returnString() << " ";
     cout << "\n";
-    */
+    
+    return "";
+}
+*/
+// Gets the best hand possible for the hand.
+string Hand::bestHand() {
+    //Gets a hand that is sorted numerically in descending order.
+    vector<Card> hand = sortHand();
+    string flushSuit = flush(hand);
+    // Checks if the hand has a flush.
+    if (flushSuit.compare(" ")) {
+        // Gets a hand that has cards from flush.
+        vector<Card> flushHand = flushedHand(hand, flushSuit);
+        // Checks if hand has a straight.
+        int straightStart = straight(flushHand);
+        if (straightStart != -1) {
+            // If straight begins with an ACE.
+            if (hand[straightStart].getRank() == 14) {
+                return "Royal Flush";
+            } else {
+                // Otherwise just a normal straight.
+                return "Straight Flush";
+            }
+        } else {
+            // If it does not contain a straight, then just its just a flush.
+            cout << "Flush\n";
+            return "Flush";
+        }
+    } else {
+        // If hand does not have a flush.
+        // If hand has a four of a kind. 
+        int four = fourKind(hand);
+        if (four != -1) {
+            return "Four of a Kind";
+        } 
+
+        int triples = triple(hand);
+        vector<int> pairs = pair(hand);
+        // If hand has a full house.
+        if (checkFullHouse(triples, pairs)) {
+            return "Full House\n";
+        }
+
+        // If hand has a straight.
+        int straightStartOther = straight(hand);
+        if (straightStartOther != -1) {
+            return "Straight";
+        }
+
+        // If hand has a three of a kind.
+        if (triples != -1) {
+            return "Triples";
+        }
+
+        // If hand has a two pair.
+        if (pairs.size() >= 2) {
+            return "Two Pair";
+        }
+
+        // If hand has a pair.
+        if (pairs.size() == 1) {
+            return "Single Pair";
+        }
+
+        // Otherwise we take the highest card.
+        return "Highest Card";
+    }
     return "";
 }
 
@@ -170,6 +296,19 @@ vector<Card> Hand::sortHand() {
     return hand;
 }
 
+vector<Card> Hand::flushedHand(vector<Card> hand, string flushSuit) {
+    vector<Card> newHand;
+    int j = 0;
+    for (int i = 0; i < hand.size(); i++) {
+        if (!((hand[i].getSuit()).compare(flushSuit))) {
+            newHand.push_back(hand[i]);
+            j++;
+        }
+        if (j == 5) break;
+    }
+    return newHand;
+}
+
 //Checks if there is a flush.
 string Hand::flush(vector<Card> hand) {
     int c = 0, d = 0, h = 0, s = 0; //clubs, hearts, ...
@@ -186,7 +325,7 @@ string Hand::flush(vector<Card> hand) {
     return " ";
 }
 
-//Gets the start of a straight if it exists.
+//Gets the start (index within vector) of a straight if it exists.
 int Hand::straight(vector<Card> hand) {
     int straightCount = 1;
     int straightStart = 0;
@@ -254,11 +393,40 @@ int Hand::fourKind(vector<Card> hand) {
             count++;
             if (count == 4) {
                 four = hand[i].getRank();
-                break; //Can only have at most one triple in a hand.
+                break; //Can only have at most one four of a king in a hand.
             }
         } else {
             count = 1;
         }
     }
     return four;
+}
+
+// Checks if hand contains a full house.
+bool Hand::checkFullHouse(int triple, vector<int> pairs) {
+    bool found = false;
+    if (triple != -1 && !pairs.empty()) {
+        for (int i = 0; i < pairs.size(); i++) {
+            if (triple != pairs[i]) {
+                found = true;
+                break;
+            }
+        }
+    }
+    return found;
+}
+
+// Converts hand to a string.
+string Hand::handToString(vector<Card> hand) {
+    string strHand = "";
+    for (int i = 0; i < hand.size(); i++) {
+        strHand += hand[i].returnString() + " ";
+    }
+    return strHand;
+}
+
+// Fills up hand with high cards if there is space.
+vector<Card> fillHand(vector<Card> hand, int rank) {
+    vector<Card> newHand;
+    return newHand;
 }
