@@ -20,7 +20,10 @@ class Hand {
         vector<int> pair(vector<Card> hand); //Checks if there is a pair.
         bool checkFullHouse(int triple, vector<int> pairs);
         string handToString(vector<Card> hand);
-        vector<Card> fillHand(vector<Card> hand, int rank);
+        vector<Card> fillHand(vector<Card> hand, int rank1, int rank2);
+        vector<Card> fillHandStraight(vector<Card> hand, int straightStart);
+        vector<Card> fillHandStraightFlush(vector<Card> hand, int start, string suit);
+        vector<Card> fillHandFlush(vector<Card> hand, string suit);
     private:
         vector<Card> _cards;
 };
